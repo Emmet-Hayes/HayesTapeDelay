@@ -10,15 +10,10 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 #include <map>;
 #include "Oscillator.h"
 #include "Util.h"
-
-//==============================================================================
-/**
-*/
-
 namespace Parameters
 {
 	static const Identifier gain{ "gain" };
@@ -31,10 +26,6 @@ namespace Parameters
 	static const Identifier flutterdepth{ "flutter depth" };
 	static const Identifier wowfreq{ "wow frequency" };
 	static const Identifier wowdepth{ "wow depth" };
-	static const Identifier reverbenabled{ "reverb enabled" };
-	static const Identifier roomsize{ "room size" };
-	static const Identifier damping{ "damping" };
-	static const Identifier width{ "width" };
 
 	struct ParameterInfo
 	{
@@ -47,20 +38,16 @@ namespace Parameters
 
 	static std::map<Identifier, ParameterInfo> parameterInfoMap
 	{
-		{ gain, { "Gain", -9.0f, -30.0f, 0.0f, 0.3f}},
-		{ delaytime, {"Delay Time", 2, 1, 4, 1}},
-		{feedback, {"Feedback", -30.0f,-45.0f, -12.0f, 0.3f}},
-		{mix, {"Mix", 0.5f, 0.0f, 1.0f, 0.1f}},
-		{lowpass, {"Lowpass", 15000.0f, 400.0f, 21000.0f, 0.01f}},
-		{highpass, {"Highpass", 300.0f, 1.0f, 3000.0f, 0.01f}},
-		{flutterfreq, {"Flutter Frequency", 2.5f, 2.5f, 5.0f, 0.01f}},
-		{flutterdepth, {"Flutter Depth", 0.0f, -0.2f, 0.2f, 0.01f}},
-		{wowfreq, {"Wow Frequency",0.0f, 0.0f, 2.5f, 0.01}},
-		{wowdepth, {"Wow Depth",0.0f, -0.2f, 0.2f, 0.01f}},
-		{reverbenabled, {"Reverb Enabled", 1.f, 0.f, 1.f, 1}},
-		{roomsize, {"Room Size", 0.5f, 0.f, 1.f, 0.01f}},
-		{damping, {"Damping", 0.5f, 0.f, 1.f, 0.01f}},
-		{width, {"Width", 0.5f, 0.f, 1.f, 0.01f}},
+		{ gain,         { "Gain", -9.0f, -30.0f, 0.0f, 0.3f } },
+		{ delaytime,    { "Delay Time", 2, 1, 4, 1 } },
+		{ feedback,     { "Feedback", -30.0f,-45.0f, -12.0f, 0.3f } },
+		{ mix,          { "Mix", 0.5f, 0.0f, 1.0f, 0.1f } },
+		{ lowpass,      { "Lowpass", 15000.0f, 400.0f, 21000.0f, 0.01f } },
+		{ highpass,     { "Highpass", 300.0f, 1.0f, 3000.0f, 0.01f } },
+		{ flutterfreq,  { "Flutter Frequency", 6.0f, 5.0f, 20.0f, 0.01f } },
+		{ flutterdepth, { "Flutter Depth", 0.0f, -0.2f, 0.2f, 0.01f } },
+		{ wowfreq,      { "Wow Frequency",0.0f, 0.0f, 5.0f, 0.01 } },
+		{ wowdepth,     { "Wow Depth",0.0f, -0.2f, 0.2f, 0.01f } },
 	};
 }
 
@@ -157,15 +144,6 @@ private:
 	AudioParameterFloat* flutterdepth;
 	AudioParameterFloat* wowfreq;
 	AudioParameterFloat* wowdepth;
-	AudioParameterFloat* roomsize;
-	AudioParameterFloat* damping;
-	AudioParameterFloat* width;
-	AudioParameterFloat* reverbenabled;
-
-	Reverb reverbL;
-	Reverb reverbR;
-	Reverb::Parameters reverbLParameters;
-	Reverb::Parameters reverbRParameters;
 
 	float lastInputGain;
 	float lastFeedbackGain;

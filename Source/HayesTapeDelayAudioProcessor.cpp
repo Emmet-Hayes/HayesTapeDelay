@@ -32,9 +32,6 @@ AudioProcessorValueTreeState::ParameterLayout HayesTapeDelayAudioProcessor::crea
 						FloatParamPair(Parameters::flutterdepth, flutterdepth),
 						FloatParamPair(Parameters::wowfreq, wowfreq),
 						FloatParamPair(Parameters::wowdepth, wowdepth),
-						FloatParamPair(Parameters::roomsize, roomsize),
-						FloatParamPair(Parameters::damping, damping),
-						FloatParamPair(Parameters::width, width),
 
 			})
 		{
@@ -44,14 +41,6 @@ AudioProcessorValueTreeState::ParameterLayout HayesTapeDelayAudioProcessor::crea
 			p.second = param.get();
 			params.push_back(std::move(param));
 		}
-	}
-
-	{
-		auto& info = Parameters::parameterInfoMap[Parameters::reverbenabled];
-		auto param = std::make_unique<AudioParameterFloat>(Parameters::reverbenabled.toString(), info.labelName, NormalisableRange<float>(info.lowerLimit, info.upperLimit, info.interval), info.defaultValue);
-
-		reverbenabled = param.get();
-		params.push_back(std::move(param));
 	}
 	return { params.begin(), params.end() };
 }
@@ -170,10 +159,6 @@ void HayesTapeDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesP
 	oscWowL.setSampleRate(44100.0);
 	oscWowR.setFrequency(1.0);
 	oscWowR.setSampleRate(44100.0);
-
-	reverbL.setSampleRate(sampleRate);
-	reverbR.setSampleRate(sampleRate);
-
 	updateProcessing();
 }
 
@@ -197,10 +182,6 @@ void HayesTapeDelayAudioProcessor::addParameterListeners()
 	state.addParameterListener(Parameters::flutterdepth.toString(), this);
 	state.addParameterListener(Parameters::wowfreq.toString(), this);
 	state.addParameterListener(Parameters::wowdepth.toString(), this);
-	state.addParameterListener(Parameters::reverbenabled.toString(), this);
-	state.addParameterListener(Parameters::roomsize.toString(), this);
-	state.addParameterListener(Parameters::damping.toString(), this);
-	state.addParameterListener(Parameters::width.toString(), this);
 }
 
 
@@ -236,19 +217,6 @@ void HayesTapeDelayAudioProcessor::parameterChanged(const String& parameterID, f
 	updateProcessing();
 	if (parameterID == Parameters::wowdepth.toString())
 		*wowdepth = newValue;
-	updateProcessing();
-
-	if (parameterID == Parameters::roomsize.toString())
-		*roomsize = newValue;
-	updateProcessing();
-	if (parameterID == Parameters::damping.toString())
-		*damping = newValue;
-	updateProcessing();
-	if (parameterID == Parameters::width.toString())
-		*width = newValue;
-	updateProcessing();
-	if (parameterID == Parameters::reverbenabled.toString())
-		*reverbenabled = newValue;
 	updateProcessing();
 }
 
@@ -287,17 +255,6 @@ void HayesTapeDelayAudioProcessor::updateProcessing()
 	updateOscillator(1);
 
 	updateFilter();
-
-	reverbLParameters.roomSize = *roomsize;
-	reverbLParameters.damping = *damping;
-	reverbLParameters.width = *width;
-	reverbL.setParameters(reverbLParameters);
-
-	reverbRParameters.roomSize = *roomsize;
-	reverbRParameters.damping = *damping;
-	reverbRParameters.width = *width;
-	reverbR.setParameters(reverbRParameters);
-
 }
 
 void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
@@ -395,14 +352,6 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
 				/* wave shaping k = 2*/
 				*wetBufferWritePtr = (1 / atan(2)) * atan(2 * *wetBufferWritePtr);
 
-				/* reverb */
-				if (*reverbenabled == 1)
-				{
-					if (channel == 0)
-						reverbL.processMono(wetBufferWritePtr, 1);
-					else if (channel == 1)
-						reverbR.processMono(wetBufferWritePtr, 1);
-				}
 				/* mix wet and dry signals */
 				*bufferWritePtr = *wetBufferWritePtr + (sqrt(1 - theDelayEngine.mixInput) * cleansig);
 
