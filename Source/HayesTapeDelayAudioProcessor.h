@@ -31,7 +31,7 @@ namespace Parameters
 		{ gain,         { "Gain", -9.0f, -30.0f, 0.0f, 0.3f } },
 		{ delaytime,    { "Delay Time", 2, 1, 4, 1 } },
 		{ feedback,     { "Feedback", -30.0f,-45.0f, -1.0f, 0.3f } },
-		{ mix,          { "Mix", 0.5f, 0.0f, 1.0f, 0.1f } },
+		{ mix,          { "Mix", 0.5f, 0.0f, 1.0f, 0.01f } },
 		{ lowpass,      { "Lowpass", 15000.0f, 400.0f, 21000.0f, 0.01f } },
 		{ highpass,     { "Highpass", 300.0f, 1.0f, 3000.0f, 0.01f } },
 		{ flutterfreq,  { "Flutter Frequency", 6.0f, 5.0f, 20.0f, 0.01f } },
@@ -48,15 +48,6 @@ class HayesTapeDelayAudioProcessor : public AudioProcessor,
 public:
 	HayesTapeDelayAudioProcessor();
 
-	void prepareToPlay(double sampleRate, int samplesPerBlock) override;
-
-#ifndef JucePlugin_PreferredChannelConfigurations
-	bool isBusesLayoutSupported(const BusesLayout& layouts) const override;
-#endif
-
-	void processBlock(AudioBuffer<float>&, MidiBuffer&) override;
-
-	AudioProcessorEditor* createEditor() override;
 	void releaseResources() override {};
 	bool hasEditor() const override { return true; }
 	const juce::String getName() const override { return JucePlugin_Name; }
@@ -69,6 +60,9 @@ public:
 	const juce::String getProgramName(int /*index*/) override { return juce::String(); }
 	void changeProgramName(int /*index*/, const juce::String& /*newName*/) override {};
 
+	void prepareToPlay(double sampleRate, int samplesPerBlock) override;
+	void processBlock(AudioBuffer<float>&, MidiBuffer&) override;
+	AudioProcessorEditor* createEditor() override;
 	void getStateInformation(MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 

@@ -12,9 +12,9 @@ public:
 	juce::Font getPopupMenuFont() override;
 	void drawPopupMenuBackground(juce::Graphics&, int, int) override;
 	inline void setScale(const float s) { scale = s; }
-
-private:
 	juce::Font getCommonMenuFont(float);
+private:
+
 
 	float scale = 1.0f;
 	float rotaryOutlineBrightness = 1.0f;

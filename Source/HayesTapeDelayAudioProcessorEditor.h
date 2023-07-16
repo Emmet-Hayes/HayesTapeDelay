@@ -3,6 +3,11 @@
 #include <JuceHeader.h>
 #include "HayesTapeDelayAudioProcessor.h"
 #include "CustomLookAndFeel.h"
+#include "FreqSlider.h"
+#include "PercentSlider.h"
+#include "TimeSlider.h"
+#include "DbSlider.h"
+#include "DepthSlider.h"
 
 class HayesTapeDelayAudioProcessorEditor : public AudioProcessorEditor
 									
@@ -16,16 +21,16 @@ public:
 private:
     HayesTapeDelayAudioProcessor& processor;
 
-	std::unique_ptr<Slider> delayTimeSlider;
-	std::unique_ptr<Slider> gainSlider;
-	std::unique_ptr<Slider> feedbackSlider;
-	std::unique_ptr<Slider> wetDrySlider;
-	std::unique_ptr<Slider> filterCutOffSlider;
-	std::unique_ptr<Slider> filterCutOffSliderHi;
-	std::unique_ptr<Slider> flutterFreqSlider;
-	std::unique_ptr<Slider> flutterDepthSlider;
-	std::unique_ptr<Slider> wowFreqSlider;
-	std::unique_ptr<Slider> wowDepthSlider;
+	std::unique_ptr<TimeSlider> delayTimeSlider;
+	std::unique_ptr<DbSlider> gainSlider;
+	std::unique_ptr<DbSlider> feedbackSlider;
+	std::unique_ptr<PercentSlider> wetDrySlider;
+	std::unique_ptr<FreqSlider> filterCutOffSlider;
+	std::unique_ptr<FreqSlider> filterCutOffSliderHi;
+	std::unique_ptr<FreqSlider> flutterFreqSlider;
+	std::unique_ptr<DepthSlider> flutterDepthSlider;
+	std::unique_ptr<FreqSlider> wowFreqSlider;
+	std::unique_ptr<DepthSlider> wowDepthSlider;
 
 	std::unique_ptr<Label> delayTimeLabel;
 	std::unique_ptr<Label> gainLabel;
@@ -50,6 +55,8 @@ private:
 	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> wowDepthAttachment;
 
 	std::unique_ptr<CustomLookAndFeel> customLookAndFeel;
+	
+	juce::Image image;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HayesTapeDelayAudioProcessorEditor)
 };

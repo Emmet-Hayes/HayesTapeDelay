@@ -6,6 +6,12 @@
 #include <sstream>
 #include <cmath>
 
+HayesTapeDelayAudioProcessor::HayesTapeDelayAudioProcessor()
+	: apvts{ *this, nullptr, "PARAMETERS", createParameterLayout() }
+{
+	addParameterListeners();
+}
+
 AudioProcessorValueTreeState::ParameterLayout HayesTapeDelayAudioProcessor::createParameterLayout()
 {
 	std::vector<std::unique_ptr<RangedAudioParameter>> params;
@@ -35,21 +41,7 @@ AudioProcessorValueTreeState::ParameterLayout HayesTapeDelayAudioProcessor::crea
 	return { params.begin(), params.end() };
 }
 
-HayesTapeDelayAudioProcessor::HayesTapeDelayAudioProcessor()
-:   apvts { *this, nullptr, "PARAMETERS", createParameterLayout() }
-   #ifndef JucePlugin_PreferredChannelConfigurations
-,	AudioProcessor(BusesProperties()
-   #if ! JucePlugin_IsMidiEffect
-    #if ! JucePlugin_IsSynth
-		.withInput("Input", AudioChannelSet::stereo(), true)
-    #endif
-		.withOutput("Output", AudioChannelSet::stereo(), true)
-   #endif
-	)
-   #endif
-{
-	addParameterListeners();
-}
+
 
 void HayesTapeDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
@@ -122,30 +114,6 @@ void HayesTapeDelayAudioProcessor::parameterChanged(const String& parameterID, f
 		*wowdepth = newValue;
 	updateProcessing();
 }
-
-#ifndef JucePlugin_PreferredChannelConfigurations
-bool HayesTapeDelayAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
-{
-#if JucePlugin_IsMidiEffect
-	ignoreUnused(layouts);
-	return true;
-#else
-	// This is the place where you check if the layout is supported.
-	// In this template code we only support mono or stereo.
-	if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
-		&& layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
-		return false;
-
-	// This checks if the input layout matches the output layout
-#if ! JucePlugin_IsSynth
-	if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-		return false;
-#endif
-
-	return true;
-#endif
-}
-#endif
 
 void HayesTapeDelayAudioProcessor::updateProcessing()
 {
