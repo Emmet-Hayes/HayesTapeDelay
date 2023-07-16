@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-	This file was auto-generated!
-
-	It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #include "HayesTapeDelayAudioProcessor.h"
 #include "HayesTapeDelayAudioProcessorEditor.h"
 
@@ -45,7 +35,6 @@ AudioProcessorValueTreeState::ParameterLayout HayesTapeDelayAudioProcessor::crea
 	return { params.begin(), params.end() };
 }
 
-//==============================================================================
 HayesTapeDelayAudioProcessor::HayesTapeDelayAudioProcessor()
 	: state(*this, nullptr, "PARAMETERS", createParameterLayout()),
 
@@ -67,7 +56,6 @@ HayesTapeDelayAudioProcessor::~HayesTapeDelayAudioProcessor()
 {
 }
 
-//==============================================================================
 const String HayesTapeDelayAudioProcessor::getName() const
 {
 	return JucePlugin_Name;
@@ -129,7 +117,6 @@ void HayesTapeDelayAudioProcessor::changeProgramName(int index, const String& ne
 {
 }
 
-//==============================================================================
 void HayesTapeDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
 	// Use this method as the place to do any pre-playback
@@ -285,17 +272,11 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
 		float* wetBufferWritePtr = wetBuffer.getWritePointer(channel);
 
 		// fill delayBuffer
-		if (channel == 0)
-			fillBuffer(0, bufferLength, delayBufferLength, bufferReadPtr, dBWritePositionL, theDelayEngine.gainInput, lastInputGain);
-		else if (channel == 1)
-			fillBuffer(1, bufferLength, delayBufferLength, bufferReadPtr, dBWritePositionR, theDelayEngine.gainInput, lastInputGain);
+		fillBuffer(channel, bufferLength, delayBufferLength, bufferReadPtr, dBWritePositionR, theDelayEngine.gainInput, lastInputGain);
 		lastInputGain = theDelayEngine.gainInput;
 
 		float writeValue = {};
 		updateFilter(); // update values for high-pass & low-pass filters
-//		fetchDelay(buffer, channel, bufferLength, delayBufferLength, bufferReadPtr, delayBufferReadPtr, 0.5, 0.5); /* 1 measure of delay from delay buffer to output buffer*/
-//		sendFeedback(buffer, channel, bufferLength, delayBufferLength, bufferWritePtr, 0.8, 0.8);					/* send output buffer into delay buffer (i.e. 2 units into delay buffer etc*/
-
 		/* sample processing loop */
 		for (int i = 0; i < bufferLength; i++)
 		{
@@ -332,10 +313,9 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
 			else
 			{
 				updateOscillator(channel); //returns mod value
-
-				if (delayTimeInSamples - delaySampleFloor != 0) {
+				if (delayTimeInSamples - delaySampleFloor != 0)
 					delayTimeInSamples -= (delayTimeInSamples - delaySampleFloor);
-				}
+
 				/*get values for interpolation*/
 				writeValue = calcWriteValue(channel, delayBuffer, k, i, delayBufferLength, delayTimeInSamples, mod);
 				*wetBufferWritePtr = writeValue * sqrt(theDelayEngine.mixInput);
@@ -361,9 +341,7 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
 			}
 			bufferWritePtr++;
 			wetBufferWritePtr++;
-			/* end sample processing loop */
 		}
-		/* end channel processing loop */
 
 		if (channel == 0)
 		{
@@ -376,8 +354,6 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
 		}
 	}
 }
-
-//==============================================================================
 
 float HayesTapeDelayAudioProcessor::calcWriteValue(int channel, AudioBuffer<float>& buffer, int k, int i, int delayBufferLength, float delayTimeInSamples, float mod)
 {
@@ -463,9 +439,6 @@ AudioProcessorEditor* HayesTapeDelayAudioProcessor::createEditor()
 
 void HayesTapeDelayAudioProcessor::updateFilter()
 {
-	//float freq = state.getRawParameterValue("cutoff");
-	//float freqhi = state.getRawParameterValue("cutoffhi");
-
 	lowPassFilter0.setCoefficients(IIRCoefficients::makeLowPass(44100.0f, *lowpass));
 	lowPassFilter1.setCoefficients(IIRCoefficients::makeLowPass(44100.0f, *lowpass));
 	hiPassFilter0.setCoefficients(IIRCoefficients::makeHighPass(44100.0f, *highpass));
@@ -555,18 +528,7 @@ double HayesTapeDelayAudioProcessor::updateOscillator(int channel)
 	*/
 }
 
-
-
-//==============================================================================
-// This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
 	return new HayesTapeDelayAudioProcessor();
 }
-
-
-/*
-
-
-
-*/
