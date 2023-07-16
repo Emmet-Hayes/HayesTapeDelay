@@ -36,26 +36,23 @@ AudioProcessorValueTreeState::ParameterLayout HayesTapeDelayAudioProcessor::crea
 }
 
 HayesTapeDelayAudioProcessor::HayesTapeDelayAudioProcessor()
-:   state(*this, nullptr, "PARAMETERS", createParameterLayout()),
-
-#ifndef JucePlugin_PreferredChannelConfigurations
-	AudioProcessor(BusesProperties()
-#if ! JucePlugin_IsMidiEffect
-#if ! JucePlugin_IsSynth
+:   apvts { *this, nullptr, "PARAMETERS", createParameterLayout() }
+   #ifndef JucePlugin_PreferredChannelConfigurations
+,	AudioProcessor(BusesProperties()
+   #if ! JucePlugin_IsMidiEffect
+    #if ! JucePlugin_IsSynth
 		.withInput("Input", AudioChannelSet::stereo(), true)
-#endif
+    #endif
 		.withOutput("Output", AudioChannelSet::stereo(), true)
-#endif
+   #endif
 	)
-#endif
+   #endif
 {
 	addParameterListeners();
 }
 
 void HayesTapeDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-	// Use this method as the place to do any pre-playback
-	// initialisation that you need..
 	const int numInputChannels = getTotalNumInputChannels();
 	const int delayBufferSize = sampleRate * 10;
 	mSampleRate = sampleRate;
@@ -68,36 +65,36 @@ void HayesTapeDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesP
 	spec.maximumBlockSize = samplesPerBlock;
 	spec.numChannels = getTotalNumOutputChannels();
 
-	lowPassFilter0.setCoefficients(IIRCoefficients::makeLowPass(44100.0f, 15000.0f));
-	lowPassFilter1.setCoefficients(IIRCoefficients::makeLowPass(44100.0f, 15000.0f));
-	hiPassFilter0.setCoefficients(IIRCoefficients::makeHighPass(44100.0f, 300.0f));
-	hiPassFilter1.setCoefficients(IIRCoefficients::makeHighPass(44100.0f, 300.0f));
+	lowPassFilter0.setCoefficients(IIRCoefficients::makeLowPass(mSampleRate, 15000.0f));
+	lowPassFilter1.setCoefficients(IIRCoefficients::makeLowPass(mSampleRate, 15000.0f));
+	hiPassFilter0.setCoefficients(IIRCoefficients::makeHighPass(mSampleRate, 300.0f));
+	hiPassFilter1.setCoefficients(IIRCoefficients::makeHighPass(mSampleRate, 300.0f));
 
 	oscFlutterL.setFrequency(1.0);
-	oscFlutterL.setSampleRate(44100.0);
+	oscFlutterL.setSampleRate(mSampleRate);
 	oscFlutterR.setFrequency(1.0);
-	oscFlutterR.setSampleRate(44100.0);
+	oscFlutterR.setSampleRate(mSampleRate);
 	oscWowL.setFrequency(1.0);
-	oscWowL.setSampleRate(44100.0);
+	oscWowL.setSampleRate(mSampleRate);
 	oscWowR.setFrequency(1.0);
-	oscWowR.setSampleRate(44100.0);
+	oscWowR.setSampleRate(mSampleRate);
 	updateProcessing();
 }
 
 void HayesTapeDelayAudioProcessor::addParameterListeners()
 {
-	auto& state = getValueTreeState();
+	auto& apvts = getValueTreeState();
 
-	state.addParameterListener(Parameters::gain.toString(), this);
-	state.addParameterListener(Parameters::delaytime.toString(), this);
-	state.addParameterListener(Parameters::feedback.toString(), this);
-	state.addParameterListener(Parameters::mix.toString(), this);
-	state.addParameterListener(Parameters::lowpass.toString(), this);
-	state.addParameterListener(Parameters::highpass.toString(), this);
-	state.addParameterListener(Parameters::flutterfreq.toString(), this);
-	state.addParameterListener(Parameters::flutterdepth.toString(), this);
-	state.addParameterListener(Parameters::wowfreq.toString(), this);
-	state.addParameterListener(Parameters::wowdepth.toString(), this);
+	apvts.addParameterListener(Parameters::gain.toString(), this);
+	apvts.addParameterListener(Parameters::delaytime.toString(), this);
+	apvts.addParameterListener(Parameters::feedback.toString(), this);
+	apvts.addParameterListener(Parameters::mix.toString(), this);
+	apvts.addParameterListener(Parameters::lowpass.toString(), this);
+	apvts.addParameterListener(Parameters::highpass.toString(), this);
+	apvts.addParameterListener(Parameters::flutterfreq.toString(), this);
+	apvts.addParameterListener(Parameters::flutterdepth.toString(), this);
+	apvts.addParameterListener(Parameters::wowfreq.toString(), this);
+	apvts.addParameterListener(Parameters::wowdepth.toString(), this);
 }
 
 
@@ -215,9 +212,9 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
 
 			/* get delay time from user*/
 			float delayTimeInput = (120000.0 / theDelayEngine.delayTimeInput) / bpm; //half, quarter, dotted, eighth note
-			/* calculate modulation length in samples*/
-
-			delayTimeInSamples = ((float)mSampleRate * delayTimeInput / 1000.0);
+			
+																					 /* calculate modulation length in samples*/
+			delayTimeInSamples = mSampleRate * (double)delayTimeInput / 1000.0;
 			float delaySampleFloor = (floor)(delayTimeInSamples);
 
 			/* create clean signal */
@@ -234,6 +231,7 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
 				/*get values for interpolation*/
 				writeValue = calcWriteValue(channel, delayBuffer, k, i, delayBufferLength, delayTimeInSamples, mod);
 				*wetBufferWritePtr = writeValue * sqrt(theDelayEngine.mixInput);
+
 				/* low & hi pass filter */
 				if (channel == 0)
 				{
@@ -310,10 +308,9 @@ void HayesTapeDelayAudioProcessor::fetchDelay(AudioBuffer<float>& buffer, int ch
 	const int readPosition = (int)(delayBufferLength + dBWritePositionL - delayTimeInSamples) % delayBufferLength;
 
 	if (delayBufferLength > feedbackBufferLength + readPosition)
-	{
 		buffer.copyFrom(channel, 0, delayBufferPtr + readPosition, feedbackBufferLength);
-	}
-	else {
+	else 
+	{
 		const int bufferRemaining = delayBufferLength - readPosition;
 		buffer.copyFrom(channel, 0, delayBufferPtr + readPosition, bufferRemaining);
 		buffer.copyFrom(channel, bufferRemaining, delayBufferPtr, feedbackBufferLength - bufferRemaining);
@@ -325,10 +322,9 @@ void HayesTapeDelayAudioProcessor::sendFeedback(AudioBuffer<float>& buffer, int 
 	float startGain, float endGain)
 {
 	if (delayBufferLength > feedbackBufferLength + dBWritePositionL)
-	{
 		delayBuffer.addFromWithRamp(channel, dBWritePositionL, feedbackBufferWritePtr, feedbackBufferLength, startGain, endGain);
-	}
-	else {
+	else 
+	{
 		const float bufferRemaining = delayBufferLength - dBWritePositionL;
 		const float midGain = lastInputGain + ((endGain - startGain) / feedbackBufferLength) * (bufferRemaining / feedbackBufferLength);
 		delayBuffer.addFromWithRamp(channel, dBWritePositionL, feedbackBufferWritePtr, bufferRemaining, startGain, midGain);
@@ -339,7 +335,7 @@ void HayesTapeDelayAudioProcessor::sendFeedback(AudioBuffer<float>& buffer, int 
 
 AudioProcessorValueTreeState& HayesTapeDelayAudioProcessor::getValueTreeState()
 {
-	return state;
+	return apvts;
 }
 
 AudioProcessorEditor* HayesTapeDelayAudioProcessor::createEditor()
@@ -349,23 +345,23 @@ AudioProcessorEditor* HayesTapeDelayAudioProcessor::createEditor()
 
 void HayesTapeDelayAudioProcessor::updateFilter()
 {
-	lowPassFilter0.setCoefficients(IIRCoefficients::makeLowPass(44100.0f, *lowpass));
-	lowPassFilter1.setCoefficients(IIRCoefficients::makeLowPass(44100.0f, *lowpass));
-	hiPassFilter0.setCoefficients(IIRCoefficients::makeHighPass(44100.0f, *highpass));
-	hiPassFilter1.setCoefficients(IIRCoefficients::makeHighPass(44100.0f, *highpass));
+	lowPassFilter0.setCoefficients(IIRCoefficients::makeLowPass(mSampleRate, *lowpass));
+	lowPassFilter1.setCoefficients(IIRCoefficients::makeLowPass(mSampleRate, *lowpass));
+	hiPassFilter0.setCoefficients(IIRCoefficients::makeHighPass(mSampleRate, *highpass));
+	hiPassFilter1.setCoefficients(IIRCoefficients::makeHighPass(mSampleRate, *highpass));
 }
 
 void HayesTapeDelayAudioProcessor::getStateInformation(MemoryBlock& destData)
 {
 	MemoryOutputStream stream(destData, false);
-	state.state.writeToStream(stream);
+	apvts.state.writeToStream(stream);
 }
 
 void HayesTapeDelayAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
 	ValueTree tree = ValueTree::readFromData(data, sizeInBytes);
 	if (tree.isValid())
-		state.state = tree;
+		apvts.state = tree;
 }
 
 double HayesTapeDelayAudioProcessor::updateOscillator(int channel)

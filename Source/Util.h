@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sstream>
 
-
 inline float linInterp(float x1, float x2, float y1, float y2, float x)
 {
 	float denom = x2 - x1;

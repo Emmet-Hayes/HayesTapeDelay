@@ -1,31 +1,21 @@
-/*
-  ==============================================================================
-
-	This file was auto-generated!
-
-	It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #pragma once
-
 #include <JuceHeader.h>
 #include <map>;
 #include "Oscillator.h"
 #include "Util.h"
+
 namespace Parameters
 {
-	static const Identifier gain{ "gain" };
-	static const Identifier delaytime{ "delay time" };
-	static const Identifier feedback{ "feedback" };
-	static const Identifier mix{ "mix" };
-	static const Identifier lowpass{ "lowpass" };
-	static const Identifier highpass{ "highpass" };
-	static const Identifier flutterfreq{ "flutter frequency" };
-	static const Identifier flutterdepth{ "flutter depth" };
-	static const Identifier wowfreq{ "wow frequency" };
-	static const Identifier wowdepth{ "wow depth" };
+	static const Identifier gain         { "gain" };
+	static const Identifier delaytime    { "delay time" };
+	static const Identifier feedback     { "feedback" };
+	static const Identifier mix          { "mix" };
+	static const Identifier lowpass      { "lowpass" };
+	static const Identifier highpass     { "highpass" };
+	static const Identifier flutterfreq  { "flutter frequency" };
+	static const Identifier flutterdepth { "flutter depth" };
+	static const Identifier wowfreq      { "wow frequency" };
+	static const Identifier wowdepth     { "wow depth" };
 
 	struct ParameterInfo
 	{
@@ -40,7 +30,7 @@ namespace Parameters
 	{
 		{ gain,         { "Gain", -9.0f, -30.0f, 0.0f, 0.3f } },
 		{ delaytime,    { "Delay Time", 2, 1, 4, 1 } },
-		{ feedback,     { "Feedback", -30.0f,-45.0f, -12.0f, 0.3f } },
+		{ feedback,     { "Feedback", -30.0f,-45.0f, -1.0f, 0.3f } },
 		{ mix,          { "Mix", 0.5f, 0.0f, 1.0f, 0.1f } },
 		{ lowpass,      { "Lowpass", 15000.0f, 400.0f, 21000.0f, 0.01f } },
 		{ highpass,     { "Highpass", 300.0f, 1.0f, 3000.0f, 0.01f } },
@@ -121,7 +111,7 @@ private:
 	double oscWowRPosition = 0.0;
 	double mod{ 0 };
 
-	AudioProcessorValueTreeState state;
+	AudioProcessorValueTreeState apvts;
 
 	AudioParameterFloat* gain;
 	AudioParameterFloat* delaytime;
