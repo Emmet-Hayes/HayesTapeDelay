@@ -52,71 +52,6 @@ HayesTapeDelayAudioProcessor::HayesTapeDelayAudioProcessor()
 	addParameterListeners();
 }
 
-HayesTapeDelayAudioProcessor::~HayesTapeDelayAudioProcessor()
-{
-}
-
-const String HayesTapeDelayAudioProcessor::getName() const
-{
-	return JucePlugin_Name;
-}
-
-bool HayesTapeDelayAudioProcessor::acceptsMidi() const
-{
-#if JucePlugin_WantsMidiInput
-	return true;
-#else
-	return false;
-#endif
-}
-
-bool HayesTapeDelayAudioProcessor::producesMidi() const
-{
-#if JucePlugin_ProducesMidiOutput
-	return true;
-#else
-	return false;
-#endif
-}
-
-bool HayesTapeDelayAudioProcessor::isMidiEffect() const
-{
-#if JucePlugin_IsMidiEffect
-	return true;
-#else
-	return false;
-#endif
-}
-
-double HayesTapeDelayAudioProcessor::getTailLengthSeconds() const
-{
-	return 0.0;
-}
-
-int HayesTapeDelayAudioProcessor::getNumPrograms()
-{
-	return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-				// so this should be at least 1, even if you're not really implementing programs.
-}
-
-int HayesTapeDelayAudioProcessor::getCurrentProgram()
-{
-	return 0;
-}
-
-void HayesTapeDelayAudioProcessor::setCurrentProgram(int index)
-{
-}
-
-const String HayesTapeDelayAudioProcessor::getProgramName(int index)
-{
-	return {};
-}
-
-void HayesTapeDelayAudioProcessor::changeProgramName(int index, const String& newName)
-{
-}
-
 void HayesTapeDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
 	// Use this method as the place to do any pre-playback
@@ -149,12 +84,6 @@ void HayesTapeDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesP
 	updateProcessing();
 }
 
-void HayesTapeDelayAudioProcessor::releaseResources()
-{
-	// When playback stops, you can use this as an opportunity to free up any
-	// spare memory, etc.
-}
-
 void HayesTapeDelayAudioProcessor::addParameterListeners()
 {
 	auto& state = getValueTreeState();
@@ -174,7 +103,6 @@ void HayesTapeDelayAudioProcessor::addParameterListeners()
 
 void HayesTapeDelayAudioProcessor::parameterChanged(const String& parameterID, float newValue)
 {
-
 	if (parameterID == Parameters::gain.toString())
 		*gain = newValue;
 	if (parameterID == Parameters::delaytime.toString())
@@ -231,7 +159,6 @@ void HayesTapeDelayAudioProcessor::updateProcessing()
 
 	updateOscillator(0);
 	updateOscillator(1);
-
 	updateFilter();
 }
 
@@ -271,9 +198,6 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
 		/* sample processing loop */
 		for (int i = 0; i < bufferLength; i++)
 		{
-			//if (parametersNeedUpdating.test_and_set())
-			//	updateProcessing();
-
 			int k;
 			float delayTimeInSamples;
 			double bpm;
@@ -382,7 +306,7 @@ void HayesTapeDelayAudioProcessor::fetchDelay(AudioBuffer<float>& buffer, int ch
 	const int delayBufferLength, const float* feedbackBufferPtr, const float* delayBufferPtr, float startGain, float endGain)
 {
 	int delayTimeInput = *delaytime;
-	int delayTimeInSamples = (mSampleRate * delayTimeInput / 1000.0);
+	int delayTimeInSamples = (mSampleRate * (double)delayTimeInput / 1000.0);
 	const int readPosition = (int)(delayBufferLength + dBWritePositionL - delayTimeInSamples) % delayBufferLength;
 
 	if (delayBufferLength > feedbackBufferLength + readPosition)
@@ -418,11 +342,6 @@ AudioProcessorValueTreeState& HayesTapeDelayAudioProcessor::getValueTreeState()
 	return state;
 }
 
-bool HayesTapeDelayAudioProcessor::hasEditor() const
-{
-	return true; // (change this to false if you choose to not supply an editor)
-}
-
 AudioProcessorEditor* HayesTapeDelayAudioProcessor::createEditor()
 {
 	return new HayesTapeDelayAudioProcessorEditor(*this);
@@ -435,7 +354,7 @@ void HayesTapeDelayAudioProcessor::updateFilter()
 	hiPassFilter0.setCoefficients(IIRCoefficients::makeHighPass(44100.0f, *highpass));
 	hiPassFilter1.setCoefficients(IIRCoefficients::makeHighPass(44100.0f, *highpass));
 }
-//==============================================================================
+
 void HayesTapeDelayAudioProcessor::getStateInformation(MemoryBlock& destData)
 {
 	MemoryOutputStream stream(destData, false);
@@ -445,9 +364,8 @@ void HayesTapeDelayAudioProcessor::getStateInformation(MemoryBlock& destData)
 void HayesTapeDelayAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
 	ValueTree tree = ValueTree::readFromData(data, sizeInBytes);
-	if (tree.isValid()) {
+	if (tree.isValid())
 		state.state = tree;
-	}
 }
 
 double HayesTapeDelayAudioProcessor::updateOscillator(int channel)

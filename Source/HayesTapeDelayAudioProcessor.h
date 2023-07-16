@@ -57,10 +57,8 @@ class HayesTapeDelayAudioProcessor : public AudioProcessor,
 {
 public:
 	HayesTapeDelayAudioProcessor();
-	~HayesTapeDelayAudioProcessor();
 
 	void prepareToPlay(double sampleRate, int samplesPerBlock) override;
-	void releaseResources() override;
 
 #ifndef JucePlugin_PreferredChannelConfigurations
 	bool isBusesLayoutSupported(const BusesLayout& layouts) const override;
@@ -69,20 +67,17 @@ public:
 	void processBlock(AudioBuffer<float>&, MidiBuffer&) override;
 
 	AudioProcessorEditor* createEditor() override;
-	bool hasEditor() const override;
-
-	const String getName() const override;
-
-	bool acceptsMidi() const override;
-	bool producesMidi() const override;
-	bool isMidiEffect() const override;
-	double getTailLengthSeconds() const override;
-
-	int getNumPrograms() override;
-	int getCurrentProgram() override;
-	void setCurrentProgram(int index) override;
-	const String getProgramName(int index) override;
-	void changeProgramName(int index, const String& newName) override;
+	void releaseResources() override {};
+	bool hasEditor() const override { return true; }
+	const juce::String getName() const override { return JucePlugin_Name; }
+	bool acceptsMidi() const override { return false; }
+	bool producesMidi() const override { return false; }
+	double getTailLengthSeconds() const override { return 2.0; }
+	int getNumPrograms() override { return 1; }
+	int getCurrentProgram() override { return 0; }
+	void setCurrentProgram(int /*index*/) override {}
+	const juce::String getProgramName(int /*index*/) override { return juce::String(); }
+	void changeProgramName(int /*index*/, const juce::String& /*newName*/) override {};
 
 	void getStateInformation(MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
