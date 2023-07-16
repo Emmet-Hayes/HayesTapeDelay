@@ -36,7 +36,7 @@ AudioProcessorValueTreeState::ParameterLayout HayesTapeDelayAudioProcessor::crea
 }
 
 HayesTapeDelayAudioProcessor::HayesTapeDelayAudioProcessor()
-	: state(*this, nullptr, "PARAMETERS", createParameterLayout()),
+:   state(*this, nullptr, "PARAMETERS", createParameterLayout()),
 
 #ifndef JucePlugin_PreferredChannelConfigurations
 	AudioProcessor(BusesProperties()
@@ -177,31 +177,22 @@ void HayesTapeDelayAudioProcessor::parameterChanged(const String& parameterID, f
 
 	if (parameterID == Parameters::gain.toString())
 		*gain = newValue;
-	updateProcessing();
 	if (parameterID == Parameters::delaytime.toString())
 		*delaytime = newValue;
-	updateProcessing();
 	if (parameterID == Parameters::feedback.toString())
 		*feedback = newValue;
-	updateProcessing();
 	if (parameterID == Parameters::mix.toString())
 		*mix = newValue;
-	updateProcessing();
 	if (parameterID == Parameters::lowpass.toString())
 		*lowpass = newValue;
-	updateProcessing();
 	if (parameterID == Parameters::highpass.toString())
 		*highpass = newValue;
-	updateProcessing();
 	if (parameterID == Parameters::flutterfreq.toString())
 		*flutterfreq = newValue;
-	updateProcessing();
 	if (parameterID == Parameters::flutterdepth.toString())
 		*flutterdepth = newValue;
-	updateProcessing();
 	if (parameterID == Parameters::wowfreq.toString())
 		*wowfreq = newValue;
-	updateProcessing();
 	if (parameterID == Parameters::wowdepth.toString())
 		*wowdepth = newValue;
 	updateProcessing();
