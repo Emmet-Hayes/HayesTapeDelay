@@ -8,6 +8,7 @@
 #include "TimeSlider.h"
 #include "DbSlider.h"
 #include "DepthSlider.h"
+#include "PresetBar.h"
 
 class HayesTapeDelayAudioProcessorEditor : public AudioProcessorEditor
 									
@@ -55,7 +56,8 @@ private:
 	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> wowDepthAttachment;
 
 	std::unique_ptr<CustomLookAndFeel> customLookAndFeel;
-	
+	PresetBar presetBar;
+
 	juce::Image image;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HayesTapeDelayAudioProcessorEditor)

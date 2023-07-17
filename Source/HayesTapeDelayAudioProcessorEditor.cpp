@@ -2,7 +2,9 @@
 #include "HayesTapeDelayAudioProcessorEditor.h"
 
 HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTapeDelayAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+:   AudioProcessorEditor{ &p }
+,   processor           { p }
+,   presetBar           { p }
 {
 	customLookAndFeel = std::make_unique<CustomLookAndFeel>();
 	setLookAndFeel(customLookAndFeel.get());
@@ -93,6 +95,9 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
 	wowDepthLabel->attachToComponent(wowDepthSlider.get(), false);
 	addAndMakeVisible(wowDepthSlider.get());
 
+	presetBar.setLookAndFeel(customLookAndFeel.get());
+	addAndMakeVisible(presetBar);
+
 	delayTimeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::delaytime.toString(), *delayTimeSlider);
 	gainAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::gain.toString() , *gainSlider);
 	feedbackAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::feedback.toString(), *feedbackSlider);
@@ -115,6 +120,7 @@ void HayesTapeDelayAudioProcessorEditor::paint (Graphics& g)
 
 void HayesTapeDelayAudioProcessorEditor::resized()
 {
+	presetBar.setBounds(0, 0, 700, 20);
 	delayTimeSlider->setBounds(15, 40, 100, 100);
 	feedbackSlider->setBounds(135, 40, 100, 100);
 	wetDrySlider->setBounds(15, 185, 100, 100);

@@ -87,6 +87,8 @@ public:
 
 	void updateProcessing();
 
+	AudioProcessorValueTreeState apvts;
+
 private:
 
 	void addParameterListeners();
@@ -104,8 +106,6 @@ private:
 	double oscWowLPosition = 0.0;
 	double oscWowRPosition = 0.0;
 	double mod{ 0 };
-
-	AudioProcessorValueTreeState apvts;
 
 	AudioParameterFloat* gain;
 	AudioParameterFloat* delaytime;

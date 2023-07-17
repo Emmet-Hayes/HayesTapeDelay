@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="SE2fXU" name="HayesTapeDelay" projectType="audioplug" pluginFormats="buildAU,buildLV2,buildStandalone,buildVST3"
-              displaySplashScreen="1" jucerFormatVersion="1" companyName="EmmetSoft">
+              displaySplashScreen="1" jucerFormatVersion="1" companyName="EmmetSoft"
+              defines="JUCE_MODAL_LOOPS_PERMITTED=1">
   <MAINGROUP id="gIwvAM" name="HayesTapeDelay">
     <GROUP id="{02F8A589-1A1B-1BCE-06EA-1EDCB6BE852D}" name="Source">
+      <FILE id="Xrmopv" name="PresetBar.cpp" compile="1" resource="0" file="Source/PresetBar.cpp"/>
+      <FILE id="bjAfST" name="PresetBar.h" compile="0" resource="0" file="Source/PresetBar.h"/>
+      <FILE id="Gt96TV" name="PresetComboBox.cpp" compile="1" resource="0"
+            file="Source/PresetComboBox.cpp"/>
+      <FILE id="gQURYH" name="PresetComboBox.h" compile="0" resource="0"
+            file="Source/PresetComboBox.h"/>
       <FILE id="pA8T93" name="DepthSlider.h" compile="0" resource="0" file="Source/DepthSlider.h"/>
       <FILE id="If2rf6" name="FreqSlider.h" compile="0" resource="0" file="Source/FreqSlider.h"/>
       <FILE id="wgdsLd" name="PercentSlider.h" compile="0" resource="0" file="Source/PercentSlider.h"/>
