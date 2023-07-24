@@ -4,32 +4,37 @@
               displaySplashScreen="1" jucerFormatVersion="1" companyName="EmmetSoft"
               defines="JUCE_MODAL_LOOPS_PERMITTED=1">
   <MAINGROUP id="gIwvAM" name="HayesTapeDelay">
-    <GROUP id="{02F8A589-1A1B-1BCE-06EA-1EDCB6BE852D}" name="Source">
-      <GROUP id="{DB2716A7-60CA-B8B7-0518-7362E7A5ECED}" name="Common">
-        <FILE id="b2veDt" name="BaseAudioProcessor.cpp" compile="1" resource="0"
-              file="../Common/BaseAudioProcessor.cpp"/>
-        <FILE id="qezqYu" name="BaseAudioProcessor.h" compile="0" resource="0"
-              file="../Common/BaseAudioProcessor.h"/>
-        <FILE id="LrNvWI" name="BaseAudioProcessorEditor.cpp" compile="1" resource="0"
-              file="../Common/BaseAudioProcessorEditor.cpp"/>
-        <FILE id="tk369K" name="BaseAudioProcessorEditor.h" compile="0" resource="0"
-              file="../Common/BaseAudioProcessorEditor.h"/>
-        <FILE id="NDf06E" name="CustomLookAndFeel.cpp" compile="1" resource="0"
-              file="../Common/CustomLookAndFeel.cpp"/>
-        <FILE id="fyTYAN" name="CustomLookAndFeel.h" compile="0" resource="0"
-              file="../Common/CustomLookAndFeel.h"/>
-        <FILE id="xSEQvx" name="DbSlider.h" compile="0" resource="0" file="../Common/DbSlider.h"/>
-        <FILE id="TAGxZg" name="DepthSlider.h" compile="0" resource="0" file="../Common/DepthSlider.h"/>
-        <FILE id="E0RBHb" name="FreqSlider.h" compile="0" resource="0" file="../Common/FreqSlider.h"/>
-        <FILE id="au7Jo7" name="PercentSlider.h" compile="0" resource="0" file="../Common/PercentSlider.h"/>
-        <FILE id="EaCxJ2" name="PresetBar.cpp" compile="1" resource="0" file="../Common/PresetBar.cpp"/>
-        <FILE id="S8Hcwb" name="PresetBar.h" compile="0" resource="0" file="../Common/PresetBar.h"/>
-        <FILE id="aFbW0U" name="PresetComboBox.cpp" compile="1" resource="0"
-              file="../Common/PresetComboBox.cpp"/>
-        <FILE id="O6j4WW" name="PresetComboBox.h" compile="0" resource="0"
-              file="../Common/PresetComboBox.h"/>
-        <FILE id="tudM5k" name="TimeSlider.h" compile="0" resource="0" file="../Common/TimeSlider.h"/>
+    <GROUP id="{A07A4D97-DD6C-D6E7-B4A4-1C71F0CF30CE}" name="Resources">
+      <GROUP id="{BD248458-FEB8-ED5D-11A2-90C13FC640C5}" name="Images">
+        <FILE id="YW79bb" name="bg_file.jpg" compile="0" resource="1" file="Resources/Images/bg_file.jpg"/>
       </GROUP>
+    </GROUP>
+    <GROUP id="{DB2716A7-60CA-B8B7-0518-7362E7A5ECED}" name="Common">
+      <FILE id="b2veDt" name="BaseAudioProcessor.cpp" compile="1" resource="0"
+            file="../Common/BaseAudioProcessor.cpp"/>
+      <FILE id="qezqYu" name="BaseAudioProcessor.h" compile="0" resource="0"
+            file="../Common/BaseAudioProcessor.h"/>
+      <FILE id="LrNvWI" name="BaseAudioProcessorEditor.cpp" compile="1" resource="0"
+            file="../Common/BaseAudioProcessorEditor.cpp"/>
+      <FILE id="tk369K" name="BaseAudioProcessorEditor.h" compile="0" resource="0"
+            file="../Common/BaseAudioProcessorEditor.h"/>
+      <FILE id="NDf06E" name="CustomLookAndFeel.cpp" compile="1" resource="0"
+            file="../Common/CustomLookAndFeel.cpp"/>
+      <FILE id="fyTYAN" name="CustomLookAndFeel.h" compile="0" resource="0"
+            file="../Common/CustomLookAndFeel.h"/>
+      <FILE id="xSEQvx" name="DbSlider.h" compile="0" resource="0" file="../Common/DbSlider.h"/>
+      <FILE id="TAGxZg" name="DepthSlider.h" compile="0" resource="0" file="../Common/DepthSlider.h"/>
+      <FILE id="E0RBHb" name="FreqSlider.h" compile="0" resource="0" file="../Common/FreqSlider.h"/>
+      <FILE id="au7Jo7" name="PercentSlider.h" compile="0" resource="0" file="../Common/PercentSlider.h"/>
+      <FILE id="EaCxJ2" name="PresetBar.cpp" compile="1" resource="0" file="../Common/PresetBar.cpp"/>
+      <FILE id="S8Hcwb" name="PresetBar.h" compile="0" resource="0" file="../Common/PresetBar.h"/>
+      <FILE id="aFbW0U" name="PresetComboBox.cpp" compile="1" resource="0"
+            file="../Common/PresetComboBox.cpp"/>
+      <FILE id="O6j4WW" name="PresetComboBox.h" compile="0" resource="0"
+            file="../Common/PresetComboBox.h"/>
+      <FILE id="tudM5k" name="TimeSlider.h" compile="0" resource="0" file="../Common/TimeSlider.h"/>
+    </GROUP>
+    <GROUP id="{02F8A589-1A1B-1BCE-06EA-1EDCB6BE852D}" name="Source">
       <FILE id="Fgzt88" name="Oscillator.h" compile="0" resource="0" file="Source/Oscillator.h"/>
       <FILE id="J2WJbn" name="Oscillator.cpp" compile="1" resource="0" file="Source/Oscillator.cpp"/>
       <FILE id="NT66h0" name="Interpolate.h" compile="0" resource="0" file="Source/Interpolate.h"/>
@@ -42,7 +47,6 @@
       <FILE id="q0965j" name="HayesTapeDelayAudioProcessorEditor.h" compile="0"
             resource="0" file="Source/HayesTapeDelayAudioProcessorEditor.h"/>
     </GROUP>
-    <FILE id="FB2Xga" name="bg_file.jpg" compile="0" resource="1" file="Images/bg_file.jpg"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
@@ -94,6 +98,54 @@
         <MODULEPATH id="juce_video" path="../../juce"/>
       </MODULEPATHS>
     </VS2019>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+    <XCODE_IPHONE targetFolder="Builds/iOS">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="/Users/emmethayes/Desktop/HayesPlugins/JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_IPHONE>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
