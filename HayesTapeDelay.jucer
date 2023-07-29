@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="SE2fXU" name="HayesTapeDelay" projectType="audioplug" pluginFormats="buildAU,buildLV2,buildStandalone,buildVST3"
+<JUCERPROJECT id="SE2fXU" name="HayesTapeDelay" projectType="audioplug" pluginFormats="buildAU,buildVST3"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="EmmetSoft"
               defines="JUCE_MODAL_LOOPS_PERMITTED=1">
   <MAINGROUP id="gIwvAM" name="HayesTapeDelay">
@@ -10,6 +10,10 @@
       </GROUP>
     </GROUP>
     <GROUP id="{DB2716A7-60CA-B8B7-0518-7362E7A5ECED}" name="Common">
+      <GROUP id="{7ABAD013-141C-1EF5-BC50-6294806455AC}" name="Fonts">
+        <FILE id="vwxdFu" name="Juliafont-Regular.ttf" compile="0" resource="1"
+              file="../Common/Fonts/Juliafont-Regular.ttf"/>
+      </GROUP>
       <FILE id="b2veDt" name="BaseAudioProcessor.cpp" compile="1" resource="0"
             file="../Common/BaseAudioProcessor.cpp"/>
       <FILE id="qezqYu" name="BaseAudioProcessor.h" compile="0" resource="0"

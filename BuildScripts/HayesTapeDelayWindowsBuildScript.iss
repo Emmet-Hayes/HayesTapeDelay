@@ -7,9 +7,9 @@
 AppId={{93951FDE-7122-4745-90CE-EBB71DD44D28}}
 AppName=HayesTapeDelay
 AppVersion=1.0.0
-DefaultDirName={pf64}\Common Files\VST3\HayesTapeDelay\VST3
+DefaultDirName={commonpf64}\Common Files\VST3\HayesTapeDelay\VST3
 DefaultGroupName=EmmetSoft
-OutputDir=userdocs:HayesInstallers
+OutputDir=userdocs:HayesPlugins\HayesInstallers
 OutputBaseFilename=HayesTapeDelayInstaller
 Compression=lzma
 SolidCompression=yes
