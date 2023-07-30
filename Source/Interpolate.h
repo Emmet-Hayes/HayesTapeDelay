@@ -18,7 +18,7 @@ inline float linInterp(float x1, float x2, float y1, float y2, float x)
 	return result;
 }
 
-inline float cubicInterp(int channel, float delayTimeInSamples, float floorValue0, float floorValue, float floorValue1, float floorValue2, float mod)
+inline float cubicInterp(int /*channel*/, float delayTimeInSamples, float floorValue0, float floorValue, float floorValue1, float floorValue2, float mod)
 {
 	float fraction = (delayTimeInSamples + mod) - floor(delayTimeInSamples + mod);
 	float fractionSqrt = fraction * fraction;

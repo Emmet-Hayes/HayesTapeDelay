@@ -30,15 +30,15 @@ namespace Parameters
     static std::map<Identifier, ParameterInfo> parameterInfoMap
     {
         { gain,         { "Gain", -9.0f, -30.0f, 0.0f, 0.3f } },
-        { delaytime,    { "Delay Time", 2, 1, 4, 1 } },
-        { feedback,     { "Feedback", -30.0f,-45.0f, -1.0f, 0.3f } },
+        { delaytime,    { "Delay Time", 2.0f, 1.0f, 4.0f, 1.0f } },
+        { feedback,     { "Feedback", -30.0f, -45.0f, -1.0f, 0.3f } },
         { mix,          { "Mix", 0.5f, 0.0f, 1.0f, 0.01f } },
         { lowpass,      { "Lowpass", 15000.0f, 400.0f, 21000.0f, 0.01f } },
         { highpass,     { "Highpass", 300.0f, 1.0f, 3000.0f, 0.01f } },
         { flutterfreq,  { "Flutter Frequency", 6.0f, 5.0f, 20.0f, 0.01f } },
         { flutterdepth, { "Flutter Depth", 0.0f, -0.2f, 0.2f, 0.01f } },
-        { wowfreq,      { "Wow Frequency",0.0f, 0.0f, 5.0f, 0.01 } },
-        { wowdepth,     { "Wow Depth",0.0f, -0.2f, 0.2f, 0.01f } },
+        { wowfreq,      { "Wow Frequency", 0.0f, 0.0f, 5.0f, 0.01 } },
+        { wowdepth,     { "Wow Depth", 0.0f, -0.2f, 0.2f, 0.01f } },
     };
 }
 

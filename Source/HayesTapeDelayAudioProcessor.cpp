@@ -44,8 +44,8 @@ AudioProcessorValueTreeState::ParameterLayout HayesTapeDelayAudioProcessor::crea
 void HayesTapeDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     const int numInputChannels = getTotalNumInputChannels();
-    const int delayBufferSize = sampleRate * 10;
-    mSampleRate = sampleRate;
+    const int delayBufferSize = static_cast<int>(sampleRate * 10);
+    mSampleRate = static_cast<int>(sampleRate);
 
     delayBuffer.setSize(numInputChannels, delayBufferSize, false, true);
     wetBuffer.setSize(numInputChannels, samplesPerBlock, false, true);
@@ -73,8 +73,6 @@ void HayesTapeDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesP
 
 void HayesTapeDelayAudioProcessor::addParameterListeners()
 {
-    auto& apvts = getValueTreeState();
-
     apvts.addParameterListener(Parameters::gain.toString(), this);
     apvts.addParameterListener(Parameters::delaytime.toString(), this);
     apvts.addParameterListener(Parameters::feedback.toString(), this);
@@ -124,7 +122,7 @@ void HayesTapeDelayAudioProcessor::updateProcessing()
     updateFilter();
 }
 
-void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& /*midiMessages*/)
 {
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
@@ -171,14 +169,14 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
             /* send 1 unit of delay from delay buffer to output buffer*/
             if (channel == 0)
                 k = dBWritePositionL;
-            else if (channel == 1)
+            else
                 k = dBWritePositionR;
 
             /* get delay time from user*/
-            float delayTimeInput = (120000.0 / theDelayEngine.delayTimeInput) / bpm; //half, quarter, dotted, eighth note
+            float delayTimeInput = (120000.0f / theDelayEngine.delayTimeInput) / static_cast<float>(bpm); //half, quarter, dotted, eighth note
             
                                                                                      /* calculate modulation length in samples*/
-            delayTimeInSamples = mSampleRate * (double)delayTimeInput / 1000.0;
+            delayTimeInSamples = mSampleRate * delayTimeInput / 1000.0f;
             float delaySampleFloor = (floor)(delayTimeInSamples);
 
             /* create clean signal */
@@ -193,7 +191,7 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
                     delayTimeInSamples -= (delayTimeInSamples - delaySampleFloor);
 
                 /*get values for interpolation*/
-                writeValue = calcWriteValue(channel, delayBuffer, k, i, delayBufferLength, delayTimeInSamples, mod);
+                writeValue = calcWriteValue(channel, delayBuffer, k, i, delayBufferLength, delayTimeInSamples, static_cast<float>(mod));
                 *wetBufferWritePtr = writeValue * sqrt(theDelayEngine.mixInput);
 
                 /* low & hi pass filter */
@@ -207,7 +205,7 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
                     *wetBufferWritePtr = hiPassFilter1.processSingleSampleRaw(*wetBufferWritePtr);
                 }
                 /* wave shaping k = 2*/
-                *wetBufferWritePtr = (1 / atan(2)) * atan(2 * *wetBufferWritePtr);
+                *wetBufferWritePtr = static_cast<float>((1 / atan(2)) * atan(2 * *wetBufferWritePtr));
 
                 /* mix wet and dry signals */
                 *bufferWritePtr = *wetBufferWritePtr + (sqrt(1 - theDelayEngine.mixInput) * cleansig);
@@ -232,19 +230,19 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
     }
 }
 
-float HayesTapeDelayAudioProcessor::calcWriteValue(int channel, AudioBuffer<float>& buffer, int k, int i, int delayBufferLength, float delayTimeInSamples, float mod)
+float HayesTapeDelayAudioProcessor::calcWriteValue(int channel, AudioBuffer<float>& buffer, int k, int i, int delayBufferLength, float delayTimeInSamples, float modifier)
 {
     float kk = (float)k;
     float ii = (float)i;
     float delayBufferLengthF = (float)delayBufferLength;
 
-    float floorValue0 = buffer.getSample(channel, ((int)(floor)(kk + ii - delayTimeInSamples - mod + delayBufferLengthF) - 1) % delayBufferLength);
-    float floorValue = buffer.getSample(channel, ((int)(floor)(kk + ii - delayTimeInSamples - mod + delayBufferLengthF) - 0) % delayBufferLength);
-    float floorValue1 = buffer.getSample(channel, ((int)(ceil)(kk + ii - delayTimeInSamples - mod + delayBufferLengthF) + 0) % delayBufferLength);
-    float floorValue2 = buffer.getSample(channel, ((int)(ceil)(kk + ii - delayTimeInSamples - mod + delayBufferLengthF) + 1) % delayBufferLength);
+    float floorValue0 = buffer.getSample(channel, ((int)(floor)(kk + ii - delayTimeInSamples - modifier + delayBufferLengthF) - 1) % delayBufferLength);
+    float floorValue = buffer.getSample(channel, ((int)(floor)(kk + ii - delayTimeInSamples - modifier + delayBufferLengthF) - 0) % delayBufferLength);
+    float floorValue1 = buffer.getSample(channel, ((int)(ceil)(kk + ii - delayTimeInSamples - modifier + delayBufferLengthF) + 0) % delayBufferLength);
+    float floorValue2 = buffer.getSample(channel, ((int)(ceil)(kk + ii - delayTimeInSamples - modifier + delayBufferLengthF) + 1) % delayBufferLength);
 
     //  return cubicInterp(channel, delayTimeInSamples, floorValue0, floorValue, floorValue1, floorValue2, mod);
-    return interpolate(floorValue0, floorValue, floorValue1, floorValue2, delayTimeInSamples, mod);
+    return interpolate(floorValue0, floorValue, floorValue1, floorValue2, delayTimeInSamples, modifier);
 }
 
 /* delay buffer is filled with contents from the output buffer*/
@@ -265,10 +263,10 @@ void HayesTapeDelayAudioProcessor::fillBuffer(int channel, const int bufferLengt
 
 /* time shift is done here from delay buffer to output buffer*/
 void HayesTapeDelayAudioProcessor::fetchDelay(AudioBuffer<float>& buffer, int channel, const int feedbackBufferLength,
-    const int delayBufferLength, const float* feedbackBufferPtr, const float* delayBufferPtr, float startGain, float endGain)
+    const int delayBufferLength, const float* /*feedbackBufferPtr*/, const float* delayBufferPtr, float /*startGain*/, float /*endGain*/)
 {
-    int delayTimeInput = *delaytime;
-    int delayTimeInSamples = (mSampleRate * (double)delayTimeInput / 1000.0);
+    int delayTimeInput = static_cast<int>(*delaytime);
+    int delayTimeInSamples = static_cast<int>(mSampleRate * delayTimeInput / 1000.0f);
     const int readPosition = (int)(delayBufferLength + dBWritePositionL - delayTimeInSamples) % delayBufferLength;
 
     if (delayBufferLength > feedbackBufferLength + readPosition)
@@ -282,15 +280,15 @@ void HayesTapeDelayAudioProcessor::fetchDelay(AudioBuffer<float>& buffer, int ch
 }
 
 /* send feedback from output buffer to delay buffer*/
-void HayesTapeDelayAudioProcessor::sendFeedback(AudioBuffer<float>& buffer, int channel, const int feedbackBufferLength, const int delayBufferLength, float* feedbackBufferWritePtr,
+void HayesTapeDelayAudioProcessor::sendFeedback(AudioBuffer<float>& /*buffer*/, int channel, const int feedbackBufferLength, const int delayBufferLength, float* feedbackBufferWritePtr,
     float startGain, float endGain)
 {
     if (delayBufferLength > feedbackBufferLength + dBWritePositionL)
         delayBuffer.addFromWithRamp(channel, dBWritePositionL, feedbackBufferWritePtr, feedbackBufferLength, startGain, endGain);
     else 
     {
-        const float bufferRemaining = delayBufferLength - dBWritePositionL;
-        const float midGain = lastInputGain + ((endGain - startGain) / feedbackBufferLength) * (bufferRemaining / feedbackBufferLength);
+        const int bufferRemaining = delayBufferLength - dBWritePositionL;
+        const float midGain = lastInputGain + ((endGain - startGain) / feedbackBufferLength) * (bufferRemaining / static_cast<float>(feedbackBufferLength));
         delayBuffer.addFromWithRamp(channel, dBWritePositionL, feedbackBufferWritePtr, bufferRemaining, startGain, midGain);
         delayBuffer.addFromWithRamp(channel, 0, feedbackBufferWritePtr, feedbackBufferLength - bufferRemaining, midGain, endGain);
     }
