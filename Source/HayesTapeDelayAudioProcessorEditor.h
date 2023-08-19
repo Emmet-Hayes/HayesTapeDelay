@@ -16,12 +16,18 @@ class HayesTapeDelayAudioProcessorEditor : public BaseAudioProcessorEditor
 {
 public:
     HayesTapeDelayAudioProcessorEditor (HayesTapeDelayAudioProcessor&);
-
+    ~HayesTapeDelayAudioProcessorEditor();
     void paint (Graphics&) override;
     void resized() override;
 
 private:
+    CustomLookAndFeel customLookAndFeel;
+
     HayesTapeDelayAudioProcessor& processor;
+
+    juce::Image image;
+    
+    PresetBar presetBar;
 
     std::unique_ptr<TimeSlider> delayTimeSlider;
     std::unique_ptr<DbSlider> gainSlider;
@@ -55,11 +61,6 @@ private:
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> flutterDepthAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> wowFreqAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> wowDepthAttachment;
-
-    std::unique_ptr<CustomLookAndFeel> customLookAndFeel;
-    PresetBar presetBar;
-
-    juce::Image image;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HayesTapeDelayAudioProcessorEditor)
 };

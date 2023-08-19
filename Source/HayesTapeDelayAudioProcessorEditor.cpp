@@ -6,8 +6,7 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
 ,   processor           { p }
 ,   presetBar           { p }
 {
-    customLookAndFeel = std::make_unique<CustomLookAndFeel>();
-    setLookAndFeel(customLookAndFeel.get());
+    setLookAndFeel(&customLookAndFeel);
   
     delayTimeSlider = std::make_unique<TimeSlider>();
     delayTimeSlider->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
@@ -55,68 +54,57 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
     addAndMakeVisible(delayTimeSlider.get());
 
     delayTimeLabel->setJustificationType(Justification::centred);
-    delayTimeLabel->setFont(customLookAndFeel->getPopupMenuFont());
     delayTimeLabel->attachToComponent(delayTimeSlider.get(), false);
     addAndMakeVisible(delayTimeLabel.get());
 
     gainSlider->setRange(0.0f, 1.2f);
     gainLabel->setJustificationType(Justification::centred);
-    gainLabel->setFont(customLookAndFeel->getPopupMenuFont());
     gainLabel->attachToComponent(gainSlider.get(), false);
     addAndMakeVisible(gainSlider.get());
 
     feedbackSlider->setRange(-45.0, -1.0);
     feedbackLabel->setJustificationType(Justification::centred);
-    feedbackLabel->setFont(customLookAndFeel->getPopupMenuFont());
     feedbackLabel->attachToComponent(feedbackSlider.get(), false);
     addAndMakeVisible(feedbackSlider.get());
 
 
     wetDrySlider->setRange(0.0f, 1.0f);
     wetDryLabel->setJustificationType(Justification::centred);
-    wetDryLabel->setFont(customLookAndFeel->getPopupMenuFont());
     wetDryLabel->attachToComponent(wetDrySlider.get(), false);
     addAndMakeVisible(wetDrySlider.get());
 
     filterCutOffSlider->setRange(400.0f, 21000.0f);
     filterCutOffSlider->setSkewFactorFromMidPoint(600);
     filterCutOffLabel->setJustificationType(Justification::centred);
-    filterCutOffLabel->setFont(customLookAndFeel->getPopupMenuFont());
     filterCutOffLabel->attachToComponent(filterCutOffSlider.get(), false);
     addAndMakeVisible(filterCutOffSlider.get());
 
     filterCutOffSliderHi->setRange(400.0f, 21000.0f);
     filterCutOffSliderHi->setSkewFactorFromMidPoint(600);
     filterCutOffLabelHi->setJustificationType(Justification::centred);
-    filterCutOffLabelHi->setFont(customLookAndFeel->getPopupMenuFont());
     filterCutOffLabelHi->attachToComponent(filterCutOffSliderHi.get(), false);
     addAndMakeVisible(filterCutOffSliderHi.get());
 
     flutterFreqSlider->setRange(2.5f, 5.0f);
     flutterFreqLabel->setJustificationType(Justification::centred);
-    flutterFreqLabel->setFont(customLookAndFeel->getPopupMenuFont());
     flutterFreqLabel->attachToComponent(flutterFreqSlider.get(), false);
     addAndMakeVisible(flutterFreqSlider.get());
 
     flutterDepthSlider->setRange(-0.2f, 0.2f);
     flutterDepthLabel->setJustificationType(Justification::centred);
-    flutterDepthLabel->setFont(customLookAndFeel->getPopupMenuFont());
     flutterDepthLabel->attachToComponent(flutterDepthSlider.get(), false);
     addAndMakeVisible(flutterDepthSlider.get());
 
     wowFreqSlider->setRange(0.0f, 2.5f);
     wowFreqLabel->setJustificationType(Justification::centred);
-    wowFreqLabel->setFont(customLookAndFeel->getPopupMenuFont());
     wowFreqLabel->attachToComponent(wowFreqSlider.get(), false);
     addAndMakeVisible(wowFreqSlider.get());
 
     wowDepthSlider->setRange(-0.2f, 0.2f);
     wowDepthLabel->setJustificationType(Justification::centred);
-    wowDepthLabel->setFont(customLookAndFeel->getPopupMenuFont());
     wowDepthLabel->attachToComponent(wowDepthSlider.get(), false);
     addAndMakeVisible(wowDepthSlider.get());
 
-    presetBar.setLookAndFeel(customLookAndFeel.get());
     addAndMakeVisible(presetBar);
 
     delayTimeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::delaytime.toString(), *delayTimeSlider);
@@ -132,6 +120,11 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
     
     image = image = juce::ImageCache::getFromMemory(BinaryData::bg_file_jpg, BinaryData::bg_file_jpgSize);
     setSize(700, 300);
+}
+
+HayesTapeDelayAudioProcessorEditor::~HayesTapeDelayAudioProcessorEditor()
+{
+    setLookAndFeel(nullptr);
 }
 
 void HayesTapeDelayAudioProcessorEditor::paint (Graphics& g)
