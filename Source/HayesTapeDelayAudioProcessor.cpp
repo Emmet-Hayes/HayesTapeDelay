@@ -1,13 +1,12 @@
 #include "HayesTapeDelayAudioProcessor.h"
 #include "HayesTapeDelayAudioProcessorEditor.h"
 
-//#include <Windows.h>
 #include <iostream>
 #include <sstream>
 #include <cmath>
 
 HayesTapeDelayAudioProcessor::HayesTapeDelayAudioProcessor()
-:   BaseAudioProcessor { createParameterLayout() }
+    : BaseAudioProcessor{ createParameterLayout() }
 {
     addParameterListeners();
 }
@@ -174,7 +173,7 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
 
             /* get delay time from user*/
             float delayTimeInput = (120000.0f / theDelayEngine.delayTimeInput) / static_cast<float>(bpm); //half, quarter, dotted, eighth note
-            
+
                                                                                      /* calculate modulation length in samples*/
             delayTimeInSamples = mSampleRate * delayTimeInput / 1000.0f;
             float delaySampleFloor = (floor)(delayTimeInSamples);
@@ -271,7 +270,7 @@ void HayesTapeDelayAudioProcessor::fetchDelay(AudioBuffer<float>& buffer, int ch
 
     if (delayBufferLength > feedbackBufferLength + readPosition)
         buffer.copyFrom(channel, 0, delayBufferPtr + readPosition, feedbackBufferLength);
-    else 
+    else
     {
         const int bufferRemaining = delayBufferLength - readPosition;
         buffer.copyFrom(channel, 0, delayBufferPtr + readPosition, bufferRemaining);
@@ -285,7 +284,7 @@ void HayesTapeDelayAudioProcessor::sendFeedback(AudioBuffer<float>& /*buffer*/, 
 {
     if (delayBufferLength > feedbackBufferLength + dBWritePositionL)
         delayBuffer.addFromWithRamp(channel, dBWritePositionL, feedbackBufferWritePtr, feedbackBufferLength, startGain, endGain);
-    else 
+    else
     {
         const int bufferRemaining = delayBufferLength - dBWritePositionL;
         const float midGain = lastInputGain + ((endGain - startGain) / feedbackBufferLength) * (bufferRemaining / static_cast<float>(feedbackBufferLength));

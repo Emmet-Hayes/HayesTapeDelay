@@ -7,16 +7,16 @@
 
 namespace Parameters
 {
-    static const Identifier gain         { "gain" };
-    static const Identifier delaytime    { "delay time" };
-    static const Identifier feedback     { "feedback" };
-    static const Identifier mix          { "mix" };
-    static const Identifier lowpass      { "lowpass" };
-    static const Identifier highpass     { "highpass" };
-    static const Identifier flutterfreq  { "flutter frequency" };
-    static const Identifier flutterdepth { "flutter depth" };
-    static const Identifier wowfreq      { "wow frequency" };
-    static const Identifier wowdepth     { "wow depth" };
+    static const Identifier gain{ "gain" };
+    static const Identifier delaytime{ "delay time" };
+    static const Identifier feedback{ "feedback" };
+    static const Identifier mix{ "mix" };
+    static const Identifier lowpass{ "lowpass" };
+    static const Identifier highpass{ "highpass" };
+    static const Identifier flutterfreq{ "flutter frequency" };
+    static const Identifier flutterdepth{ "flutter depth" };
+    static const Identifier wowfreq{ "wow frequency" };
+    static const Identifier wowdepth{ "wow depth" };
 
     struct ParameterInfo
     {

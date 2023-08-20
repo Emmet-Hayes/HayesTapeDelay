@@ -44,9 +44,3 @@ inline float interpolate(float y0, float y1, float y2, float y3, float delayTime
 
 	return (c2 * frac + c1) *frac + c0;
 }
-
-/*
-interpolator designs are from 'Polynomial Interpolators for
-High-Quality Resampling of Oversampled Audio' by Olli Niemitalo
-http://yehar.com/blog/wp-content/uploads/2009/08/deip.pdf
-*/

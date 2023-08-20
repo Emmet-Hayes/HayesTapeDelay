@@ -7,116 +7,68 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
 ,   presetBar           { p }
 {
     setLookAndFeel(&customLookAndFeel);
-  
-    delayTimeSlider = std::make_unique<TimeSlider>();
-    delayTimeSlider->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    delayTimeSlider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
-    gainSlider = std::make_unique<DbSlider>();
-    gainSlider->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    gainSlider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
-    feedbackSlider = std::make_unique<DbSlider>();
-    feedbackSlider->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    feedbackSlider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
-    wetDrySlider = std::make_unique<PercentSlider>();
-    wetDrySlider->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    wetDrySlider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
-    filterCutOffSlider = std::make_unique<FreqSlider>();
-    filterCutOffSlider->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    filterCutOffSlider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
-    filterCutOffSliderHi = std::make_unique<FreqSlider>();
-    filterCutOffSliderHi->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    filterCutOffSliderHi->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
-    flutterFreqSlider = std::make_unique<FreqSlider>();
-    flutterFreqSlider->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    flutterFreqSlider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
-    flutterDepthSlider = std::make_unique<DepthSlider>();
-    flutterDepthSlider->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    flutterDepthSlider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
-    wowFreqSlider = std::make_unique<FreqSlider>();
-    wowFreqSlider->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    wowFreqSlider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
-    wowDepthSlider = std::make_unique<DepthSlider>();
-    wowDepthSlider->setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    wowDepthSlider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
 
-    delayTimeLabel = std::make_unique<Label>("", "Delay Time");
-    gainLabel = std::make_unique<Label>("", "Gain (dB)");
-    feedbackLabel = std::make_unique<Label>("", "Feedback (dB)");
-    wetDryLabel = std::make_unique<Label>("", "Mix");
-    filterCutOffLabel = std::make_unique<Label>("", "Low Pass");
-    filterCutOffLabelHi = std::make_unique<Label>("", "High Pass");
-    flutterFreqLabel = std::make_unique<Label>("", "Flutter Freq");
-    flutterDepthLabel = std::make_unique<Label>("", "Flutter Depth");
-    wowFreqLabel = std::make_unique<Label>("", "Wow Freq");
-    wowDepthLabel = std::make_unique<Label>("", "Wow Depth");
+    auto initialise_slider = [&](juce::Slider* slider, float low, float high, bool skew)
+    {
+        slider->setSliderStyle(juce::Slider::Rotary);
+        slider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
+        slider->setRange(low, high);
+        if (skew)
+            slider->setSkewFactorFromMidPoint(600);
+        addAndMakeVisible(slider);
+    };
 
-    delayTimeSlider->setRange(1, 8);
-    addAndMakeVisible(delayTimeSlider.get());
+    sliders[0] = std::make_unique<TimeSlider>();
+    initialise_slider(sliders[0].get(), 1.0f, 8.0f, false);
+    sliders[1] = std::make_unique<DbSlider>();
+    initialise_slider(sliders[1].get(), 0.0f, 1.2f, false);
+    sliders[2] = std::make_unique<DbSlider>();
+    initialise_slider(sliders[2].get(), -45.0f, -1.0f, false);
+    sliders[3] = std::make_unique<PercentSlider>();
+    initialise_slider(sliders[3].get(), 0.0f, 1.0f, false);
+    sliders[4] = std::make_unique<FreqSlider>();
+    initialise_slider(sliders[4].get(), 400.0f, 21000.0f, true);
+    sliders[5] = std::make_unique<FreqSlider>();
+    initialise_slider(sliders[5].get(), 400.0f, 21000.0f, true);
+    sliders[6] = std::make_unique<FreqSlider>();
+    initialise_slider(sliders[6].get(), 2.5f, 5.0f, false);
+    sliders[7] = std::make_unique<DepthSlider>();
+    initialise_slider(sliders[7].get(), -0.2f, 0.2f, false);
+    sliders[8] = std::make_unique<FreqSlider>();
+    initialise_slider(sliders[8].get(), 0.0f, 2.5f, false);
+    sliders[9] = std::make_unique<DepthSlider>();
+    initialise_slider(sliders[9].get(), -0.2f, 0.2f, false);
 
-    delayTimeLabel->setJustificationType(Justification::centred);
-    delayTimeLabel->attachToComponent(delayTimeSlider.get(), false);
-    addAndMakeVisible(delayTimeLabel.get());
+    auto initialise_label = [&](const char* name, std::unique_ptr<Label> label, juce::Slider* slider)
+    {
+        label = std::make_unique<juce::Label>("", name);
+        label->setJustificationType(Justification::centred);
+        label->attachToComponent(slider, false);
+    };
 
-    gainSlider->setRange(0.0f, 1.2f);
-    gainLabel->setJustificationType(Justification::centred);
-    gainLabel->attachToComponent(gainSlider.get(), false);
-    addAndMakeVisible(gainSlider.get());
-
-    feedbackSlider->setRange(-45.0, -1.0);
-    feedbackLabel->setJustificationType(Justification::centred);
-    feedbackLabel->attachToComponent(feedbackSlider.get(), false);
-    addAndMakeVisible(feedbackSlider.get());
-
-
-    wetDrySlider->setRange(0.0f, 1.0f);
-    wetDryLabel->setJustificationType(Justification::centred);
-    wetDryLabel->attachToComponent(wetDrySlider.get(), false);
-    addAndMakeVisible(wetDrySlider.get());
-
-    filterCutOffSlider->setRange(400.0f, 21000.0f);
-    filterCutOffSlider->setSkewFactorFromMidPoint(600);
-    filterCutOffLabel->setJustificationType(Justification::centred);
-    filterCutOffLabel->attachToComponent(filterCutOffSlider.get(), false);
-    addAndMakeVisible(filterCutOffSlider.get());
-
-    filterCutOffSliderHi->setRange(400.0f, 21000.0f);
-    filterCutOffSliderHi->setSkewFactorFromMidPoint(600);
-    filterCutOffLabelHi->setJustificationType(Justification::centred);
-    filterCutOffLabelHi->attachToComponent(filterCutOffSliderHi.get(), false);
-    addAndMakeVisible(filterCutOffSliderHi.get());
-
-    flutterFreqSlider->setRange(2.5f, 5.0f);
-    flutterFreqLabel->setJustificationType(Justification::centred);
-    flutterFreqLabel->attachToComponent(flutterFreqSlider.get(), false);
-    addAndMakeVisible(flutterFreqSlider.get());
-
-    flutterDepthSlider->setRange(-0.2f, 0.2f);
-    flutterDepthLabel->setJustificationType(Justification::centred);
-    flutterDepthLabel->attachToComponent(flutterDepthSlider.get(), false);
-    addAndMakeVisible(flutterDepthSlider.get());
-
-    wowFreqSlider->setRange(0.0f, 2.5f);
-    wowFreqLabel->setJustificationType(Justification::centred);
-    wowFreqLabel->attachToComponent(wowFreqSlider.get(), false);
-    addAndMakeVisible(wowFreqSlider.get());
-
-    wowDepthSlider->setRange(-0.2f, 0.2f);
-    wowDepthLabel->setJustificationType(Justification::centred);
-    wowDepthLabel->attachToComponent(wowDepthSlider.get(), false);
-    addAndMakeVisible(wowDepthSlider.get());
+    initialise_label("Delay Time",    std::move(labels[0]), sliders[0].get());
+    initialise_label("Gain",          std::move(labels[1]), sliders[1].get());
+    initialise_label("Feedback",      std::move(labels[2]), sliders[2].get());
+    initialise_label("Mix",           std::move(labels[3]), sliders[3].get());
+    initialise_label("Low Pass",      std::move(labels[4]), sliders[4].get());
+    initialise_label("High Pass",     std::move(labels[5]), sliders[5].get());
+    initialise_label("Flutter Freq",  std::move(labels[6]), sliders[6].get());
+    initialise_label("Flutter Depth", std::move(labels[7]), sliders[7].get());
+    initialise_label("Wow Freq",      std::move(labels[8]), sliders[8].get());
+    initialise_label("Wow Depth",     std::move(labels[9]), sliders[9].get());
 
     addAndMakeVisible(presetBar);
 
-    delayTimeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::delaytime.toString(), *delayTimeSlider);
-    gainAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::gain.toString() , *gainSlider);
-    feedbackAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::feedback.toString(), *feedbackSlider);
-    wetDryAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::mix.toString(), *wetDrySlider);
-    filterCutOffAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::lowpass.toString(), *filterCutOffSlider);
-    filterCutOffHiAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::highpass.toString(), *filterCutOffSliderHi);
-    flutterFreqAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::flutterfreq.toString(), *flutterFreqSlider);
-    flutterDepthAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::flutterdepth.toString(), *flutterDepthSlider);
-    wowFreqAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::wowfreq.toString(), *wowFreqSlider);
-    wowDepthAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), Parameters::wowdepth.toString(), *wowDepthSlider);
+    attachments[0] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "delay time", *sliders[0]);
+    attachments[1] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "gain", *sliders[1]);
+    attachments[2] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "feedback", *sliders[2]);
+    attachments[3] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "mix", *sliders[3]);
+    attachments[4] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "lowpass", *sliders[4]);
+    attachments[5] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "highpass", *sliders[5]);
+    attachments[6] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "flutter frequency", *sliders[6]);
+    attachments[7] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "flutter depth", *sliders[7]);
+    attachments[8] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "wow frequency", *sliders[8]);
+    attachments[9] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "wow depth", *sliders[9]);
     
     image = image = juce::ImageCache::getFromMemory(BinaryData::bg_file_jpg, BinaryData::bg_file_jpgSize);
     setSize(700, 300);
@@ -135,16 +87,14 @@ void HayesTapeDelayAudioProcessorEditor::paint (Graphics& g)
 void HayesTapeDelayAudioProcessorEditor::resized()
 {
     presetBar.setBounds(0, 0, 700, 20);
-    delayTimeSlider->setBounds(15, 40, 100, 100);
-    feedbackSlider->setBounds(135, 40, 100, 100);
-    wetDrySlider->setBounds(15, 185, 100, 100);
-    gainSlider->setBounds(135, 185, 100, 100);
-    filterCutOffSlider->setBounds(290, 40, 100, 100);
-    filterCutOffSliderHi->setBounds(290, 185, 100, 100);
-    flutterFreqSlider->setBounds(465, 40, 100, 100);
-    flutterDepthSlider->setBounds(585, 40, 100, 100);
-    wowFreqSlider->setBounds(465, 185, 100, 100);
-    wowDepthSlider->setBounds(585, 185, 100, 100);
+    sliders[0]->setBounds(15, 40, 100, 100);
+    sliders[1]->setBounds(135, 40, 100, 100);
+    sliders[2]->setBounds(15, 185, 100, 100);
+    sliders[3]->setBounds(135, 185, 100, 100);
+    sliders[4]->setBounds(290, 40, 100, 100);
+    sliders[5]->setBounds(290, 185, 100, 100);
+    sliders[6]->setBounds(465, 40, 100, 100);
+    sliders[7]->setBounds(585, 40, 100, 100);
+    sliders[8]->setBounds(465, 185, 100, 100);
+    sliders[9]->setBounds(585, 185, 100, 100);
 }
-
-
