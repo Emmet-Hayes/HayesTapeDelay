@@ -39,23 +39,33 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
     sliders[9] = std::make_unique<DepthSlider>();
     initialise_slider(sliders[9].get(), -0.2f, 0.2f, false);
 
-    auto initialise_label = [&](const char* name, std::unique_ptr<Label> label, juce::Slider* slider)
+    auto initialise_label = [&](juce::Label* label, juce::Slider* slider)
     {
-        label = std::make_unique<juce::Label>("", name);
         label->setJustificationType(Justification::centred);
         label->attachToComponent(slider, false);
+        addAndMakeVisible(label);
     };
 
-    initialise_label("Delay Time",    std::move(labels[0]), sliders[0].get());
-    initialise_label("Gain",          std::move(labels[1]), sliders[1].get());
-    initialise_label("Feedback",      std::move(labels[2]), sliders[2].get());
-    initialise_label("Mix",           std::move(labels[3]), sliders[3].get());
-    initialise_label("Low Pass",      std::move(labels[4]), sliders[4].get());
-    initialise_label("High Pass",     std::move(labels[5]), sliders[5].get());
-    initialise_label("Flutter Freq",  std::move(labels[6]), sliders[6].get());
-    initialise_label("Flutter Depth", std::move(labels[7]), sliders[7].get());
-    initialise_label("Wow Freq",      std::move(labels[8]), sliders[8].get());
-    initialise_label("Wow Depth",     std::move(labels[9]), sliders[9].get());
+    labels[0] = std::make_unique<juce::Label>("", "Delay Time");
+    initialise_label(labels[0].get(), sliders[0].get());
+    labels[1] = std::make_unique<juce::Label>("", "Gain");
+    initialise_label(labels[1].get(), sliders[1].get());
+    labels[2] = std::make_unique<juce::Label>("", "Feedback");
+    initialise_label(labels[2].get(), sliders[2].get());
+    labels[3] = std::make_unique<juce::Label>("", "Mix");
+    initialise_label(labels[3].get(), sliders[3].get());
+    labels[4] = std::make_unique<juce::Label>("", "Low Pass");
+    initialise_label(labels[4].get(), sliders[4].get());
+    labels[5] = std::make_unique<juce::Label>("", "High Pass");
+    initialise_label(labels[5].get(), sliders[5].get());
+    labels[6] = std::make_unique<juce::Label>("", "Flutter Freq");
+    initialise_label(labels[6].get(), sliders[6].get());
+    labels[7] = std::make_unique<juce::Label>("", "Flutter Depth");
+    initialise_label(labels[7].get(), sliders[7].get());
+    labels[8] = std::make_unique<juce::Label>("", "Wow Freq");
+    initialise_label(labels[8].get(), sliders[8].get());
+    labels[9] = std::make_unique<juce::Label>("", "Wow depth");
+    initialise_label(labels[9].get(), sliders[9].get());
 
     addAndMakeVisible(presetBar);
 
@@ -71,7 +81,12 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
     attachments[9] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "wow depth", *sliders[9]);
     
     image = image = juce::ImageCache::getFromMemory(BinaryData::bg_file_jpg, BinaryData::bg_file_jpgSize);
-    setSize(700, 300);
+    
+    const auto ratio = static_cast<double> (defaultWidth) / defaultHeight;
+    setResizable(false, true);
+    getConstrainer()->setFixedAspectRatio(ratio);
+    getConstrainer()->setSizeLimits(defaultWidth, defaultHeight, defaultWidth * 2, defaultHeight * 2);
+    setSize(defaultWidth, defaultHeight);
 }
 
 HayesTapeDelayAudioProcessorEditor::~HayesTapeDelayAudioProcessorEditor()
@@ -86,15 +101,24 @@ void HayesTapeDelayAudioProcessorEditor::paint (Graphics& g)
 
 void HayesTapeDelayAudioProcessorEditor::resized()
 {
-    presetBar.setBounds(0, 0, 700, 20);
-    sliders[0]->setBounds(15, 40, 100, 100);
-    sliders[1]->setBounds(135, 40, 100, 100);
-    sliders[2]->setBounds(15, 185, 100, 100);
-    sliders[3]->setBounds(135, 185, 100, 100);
-    sliders[4]->setBounds(290, 40, 100, 100);
-    sliders[5]->setBounds(290, 185, 100, 100);
-    sliders[6]->setBounds(465, 40, 100, 100);
-    sliders[7]->setBounds(585, 40, 100, 100);
-    sliders[8]->setBounds(465, 185, 100, 100);
-    sliders[9]->setBounds(585, 185, 100, 100);
+    const auto scale = static_cast<float> (getWidth()) / defaultWidth;
+
+    auto setBoundsAndApplyScaling = [&](juce::Component* component, int x, int y, int w, int h)
+    {
+        component->setBounds(static_cast<int>(x * scale), static_cast<int>(y * scale),
+            static_cast<int>(w * scale), static_cast<int>(h * scale));
+    };
+
+    customLookAndFeel.setWindowScale(scale);
+    setBoundsAndApplyScaling(&presetBar, 0, 0, 700, 20);
+    setBoundsAndApplyScaling(sliders[0].get(), 15, 40, 100, 100);
+    setBoundsAndApplyScaling(sliders[1].get(), 135, 40, 100, 100);
+    setBoundsAndApplyScaling(sliders[2].get(), 15, 185, 100, 100);
+    setBoundsAndApplyScaling(sliders[3].get(), 135, 185, 100, 100);
+    setBoundsAndApplyScaling(sliders[4].get(), 290, 40, 100, 100);
+    setBoundsAndApplyScaling(sliders[5].get(), 290, 185, 100, 100);
+    setBoundsAndApplyScaling(sliders[6].get(), 465, 40, 100, 100);
+    setBoundsAndApplyScaling(sliders[7].get(), 585, 40, 100, 100);
+    setBoundsAndApplyScaling(sliders[8].get(), 465, 185, 100, 100);
+    setBoundsAndApplyScaling(sliders[9].get(), 585, 185, 100, 100);
 }

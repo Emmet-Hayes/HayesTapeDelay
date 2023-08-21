@@ -32,5 +32,8 @@ private:
     std::unique_ptr<juce::Label> labels[NUM_SLIDERS];
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> attachments[NUM_SLIDERS];
 
+    int defaultWidth = 700;
+    int defaultHeight = 300;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HayesTapeDelayAudioProcessorEditor)
 };

@@ -135,17 +135,8 @@ void HayesTapeDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, Midi
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        /*
-        1. fill delay buffer (89224) with the output buffer (512)
-        2. add 1 unit of delay from delay buffer (89224) to output buffer (512)
-        3. send output buffer (512) into delay buffer (89224)
-        4. copy delay buffer (89224) into output buffer (512) */
-
         const float* bufferReadPtr = buffer.getReadPointer(channel);
-        //const float* delayBufferReadPtr = delayBuffer.getReadPointer(channel);
-        //const float* wetBufferReadPtr = wetBuffer.getReadPointer(channel);
         float* bufferWritePtr = buffer.getWritePointer(channel);
-        //float* delayBufferWritePtr = delayBuffer.getWritePointer(channel);
         float* wetBufferWritePtr = wetBuffer.getWritePointer(channel);
 
         // fill delayBuffer
