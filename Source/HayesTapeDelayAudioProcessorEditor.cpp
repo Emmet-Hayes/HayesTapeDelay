@@ -11,7 +11,6 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
     auto initialise_slider = [&](juce::Slider* slider, float low, float high, bool skew)
     {
         slider->setSliderStyle(juce::Slider::Rotary);
-        slider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
         slider->setRange(low, high);
         if (skew)
             slider->setSkewFactorFromMidPoint(600);
@@ -103,14 +102,16 @@ void HayesTapeDelayAudioProcessorEditor::resized()
 {
     const auto scale = static_cast<float> (getWidth()) / defaultWidth;
 
-    auto setBoundsAndApplyScaling = [&](juce::Component* component, int x, int y, int w, int h)
+    auto setBoundsAndApplyScaling = [&](juce::Component* component, int x, int y, int w, int h, bool isSlider = true)
     {
         component->setBounds(static_cast<int>(x * scale), static_cast<int>(y * scale),
             static_cast<int>(w * scale), static_cast<int>(h * scale));
+        if (isSlider)
+            dynamic_cast<juce::Slider*>(component)->setTextBoxStyle(juce::Slider::TextBoxBelow, false, static_cast<int>(70 * scale), static_cast<int>(20 * scale));
     };
 
     customLookAndFeel.setWindowScale(scale);
-    setBoundsAndApplyScaling(&presetBar, 0, 0, 700, 20);
+    setBoundsAndApplyScaling(&presetBar, 0, 0, 700, 20, false);
     setBoundsAndApplyScaling(sliders[0].get(), 15, 40, 100, 100);
     setBoundsAndApplyScaling(sliders[1].get(), 135, 40, 100, 100);
     setBoundsAndApplyScaling(sliders[2].get(), 15, 185, 100, 100);

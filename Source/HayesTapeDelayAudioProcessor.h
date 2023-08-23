@@ -42,8 +42,8 @@ namespace Parameters
     };
 }
 
-class HayesTapeDelayAudioProcessor : public BaseAudioProcessor,
-    private AudioProcessorValueTreeState::Listener
+class HayesTapeDelayAudioProcessor : public BaseAudioProcessor
+                                  , private AudioProcessorValueTreeState::Listener
 
 {
 public:
@@ -92,7 +92,7 @@ private:
 
     void addParameterListeners();
 
-    AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    AudioProcessorValueTreeState::ParameterLayout createParameterLayout() override;
 
     AudioSampleBuffer delayBuffer;
     AudioSampleBuffer wetBuffer;
