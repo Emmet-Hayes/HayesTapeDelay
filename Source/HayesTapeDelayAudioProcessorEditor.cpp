@@ -7,7 +7,16 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
 ,   presetBar           { p }
 {
     setLookAndFeel(&customLookAndFeel);
+    addAllGUIComponents();
+}
 
+HayesTapeDelayAudioProcessorEditor::~HayesTapeDelayAudioProcessorEditor()
+{
+    setLookAndFeel(nullptr);
+}
+
+void HayesTapeDelayAudioProcessorEditor::addAllGUIComponents()
+{
     auto initialise_slider = [&](juce::Slider* slider, float low, float high, bool skew)
     {
         slider->setSliderStyle(juce::Slider::Rotary);
@@ -68,16 +77,16 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
 
     addAndMakeVisible(presetBar);
 
-    attachments[0] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "delay time", *sliders[0]);
-    attachments[1] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "gain", *sliders[1]);
-    attachments[2] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "feedback", *sliders[2]);
-    attachments[3] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "mix", *sliders[3]);
-    attachments[4] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "lowpass", *sliders[4]);
-    attachments[5] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "highpass", *sliders[5]);
-    attachments[6] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "flutter frequency", *sliders[6]);
-    attachments[7] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "flutter depth", *sliders[7]);
-    attachments[8] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "wow frequency", *sliders[8]);
-    attachments[9] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(p.getValueTreeState(), "wow depth", *sliders[9]);
+    attachments[0] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTreeState(), "delay time", *sliders[0]);
+    attachments[1] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTreeState(), "gain", *sliders[1]);
+    attachments[2] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTreeState(), "feedback", *sliders[2]);
+    attachments[3] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTreeState(), "mix", *sliders[3]);
+    attachments[4] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTreeState(), "lowpass", *sliders[4]);
+    attachments[5] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTreeState(), "highpass", *sliders[5]);
+    attachments[6] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTreeState(), "flutter frequency", *sliders[6]);
+    attachments[7] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTreeState(), "flutter depth", *sliders[7]);
+    attachments[8] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTreeState(), "wow frequency", *sliders[8]);
+    attachments[9] = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTreeState(), "wow depth", *sliders[9]);
     
     image = image = juce::ImageCache::getFromMemory(BinaryData::bg_file_jpg, BinaryData::bg_file_jpgSize);
     
@@ -86,11 +95,6 @@ HayesTapeDelayAudioProcessorEditor::HayesTapeDelayAudioProcessorEditor (HayesTap
     getConstrainer()->setFixedAspectRatio(ratio);
     getConstrainer()->setSizeLimits(defaultWidth, defaultHeight, defaultWidth * 2, defaultHeight * 2);
     setSize(defaultWidth, defaultHeight);
-}
-
-HayesTapeDelayAudioProcessorEditor::~HayesTapeDelayAudioProcessorEditor()
-{
-    setLookAndFeel(nullptr);
 }
 
 void HayesTapeDelayAudioProcessorEditor::paint (Graphics& g)
