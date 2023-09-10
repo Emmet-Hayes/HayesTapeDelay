@@ -1,5 +1,5 @@
 #pragma once
-#include "HayesTapeDelayAudioProcessor.h"
+
 #include "../../Common/BaseAudioProcessorEditor.h"
 #include "../../Common/CustomLookAndFeel.h"
 #include "../../Common/FreqSlider.h"
@@ -8,6 +8,9 @@
 #include "../../Common/DbSlider.h"
 #include "../../Common/DepthSlider.h"
 #include "../../Common/PresetBar.h"
+
+#include "HayesTapeDelayAudioProcessor.h"
+
 
 constexpr int NUM_SLIDERS = 10;
 

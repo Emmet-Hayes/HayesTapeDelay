@@ -1,7 +1,9 @@
 #pragma once
-#include <JuceHeader.h>
+
 #include <map>
+
 #include "../../Common/BaseAudioProcessor.h"
+
 #include "Oscillator.h"
 #include "Interpolate.h"
 
